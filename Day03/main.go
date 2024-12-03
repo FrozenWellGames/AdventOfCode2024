@@ -43,9 +43,6 @@ func getRawMulData(input []string) []string {
 		for i := 0; i < len(matches); i++ {
 			allMatches = append(allMatches, matches[i])
 		}
-		//	for i := 0; i < len(allMatches); i++ {
-		//		fmt.Println(allMatches[i])
-		//	}
 	}
 	return allMatches
 }
@@ -91,14 +88,10 @@ func getFirstAndSecondNumbersRawMulData(rawMulData []string) [][]int {
 func getFirstAndSecondNumbersRawMulDataPartTwo(rawMulData []string) [][]int {
 	var firstAndSecondNumbers [][]int
 	var active = true
-	fmt.Println(active)
 	for i := 0; i < len(rawMulData); i++ {
-		fmt.Println(rawMulData[i])
 		if rawMulData[i] == "don't()" {
-			fmt.Println("It's Don't")
 			active = false
 		} else if rawMulData[i] == "do()" {
-			fmt.Println("It's Do")
 			active = true
 		} else if active == true {
 
@@ -136,20 +129,15 @@ func calculateTotalPartOne(numbers [][]int) int {
 func main() {
 	fmt.Println("Advent Of Code 2024 - Day 3")
 	fmt.Println("Part 1")
-	input := ReadFile("./test.txt")
+	input := ReadFile("./input.txt")
 	var rawMulData = getRawMulData(input)
-	fmt.Println(rawMulData)
 	var numbers = getFirstAndSecondNumbersRawMulData(rawMulData)
-	fmt.Println(numbers)
 	var totalPartOne = calculateTotalPartOne(numbers)
 	fmt.Println(totalPartOne)
 	fmt.Println("Part 2")
 	input2 := ReadFile("./input.txt")
-	fmt.Println(input2)
 	var rawMulDataPartTwo = getRawMulDataTwo(input2)
-	fmt.Println("part 2 data ", rawMulDataPartTwo)
 	var numbersPartTwo = getFirstAndSecondNumbersRawMulDataPartTwo(rawMulDataPartTwo)
-	fmt.Println(numbersPartTwo)
 	var totalPartTwo = calculateTotalPartOne(numbersPartTwo)
 	fmt.Println(totalPartTwo)
 }
