@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"regexp"
 )
 
 func check(e error) {
@@ -37,7 +36,4 @@ func main() {
 	var input = ReadFile("./test.txt")
 	fmt.Println(input[0])
 
-	regex := regexp.MustCompile(`mul\((\d+),(\d+)\)`)
-	matches := regex.FindAllString(input[0], -1)
-	fmt.Println(matches)
 }
