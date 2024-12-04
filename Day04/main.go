@@ -34,6 +34,6 @@ func ReadFile(filepath string) []string {
 func main() {
 	fmt.Println("Advent Of Code 2024 - Day 4")
 	var input = ReadFile("./test.txt")
-	fmt.Println(input[0])
+	fmt.Println(input)
 
 }
