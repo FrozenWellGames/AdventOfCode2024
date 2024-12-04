@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func check(e error) {
@@ -12,23 +13,29 @@ func check(e error) {
 	}
 }
 
-func ReadFile(filepath string) []string {
+func ReadFile(filepath string) [][]string {
 	file, err := os.Open(filepath)
 
 	check(err)
 	defer file.Close()
 
-	var returnInput []string
+	var lineInput []string
+
+	var inputGrid [][]string
 	// Reading from a file using scanner.
 	scanner := bufio.NewScanner(file)
 	var line string
 	var cnt = 1
 	for scanner.Scan() {
 		line = scanner.Text()
-		returnInput = append(returnInput, line)
+		lineInput = append(lineInput, line)
 		cnt++
 	}
-	return returnInput
+	fmt.Println(lineInput)
+	for x := 0; x < len(lineInput); x++ {
+		inputGrid = append(inputGrid, strings.Split(lineInput[x], ""))
+	}
+	return inputGrid
 }
 
 func main() {
