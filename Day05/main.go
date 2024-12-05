@@ -38,7 +38,7 @@ func ReadFile(filepath string) ([]string, []string) {
 		}
 	}
 	rulesInput := returnInput[0:emptyIndex]
-	updateInput := returnInput[emptyIndex+1 : len(returnInput)-1]
+	updateInput := returnInput[emptyIndex+1 : len(returnInput)]
 	return rulesInput, updateInput
 }
 
@@ -81,9 +81,9 @@ func indexOf(element string, data []string) int {
 	return -1 //not found.
 }
 
-func part1(rulesInput [][]string, pagesInput [][]string) [][]string {
+func part1(rulesInput [][]string, pagesInput [][]string) ([][]string, [][]string) {
 	var validLines [][]string
-
+	var invalidLines [][]string
 	for p := 0; p < len(pagesInput); p++ {
 		var isValid = true
 	out:
@@ -103,9 +103,11 @@ func part1(rulesInput [][]string, pagesInput [][]string) [][]string {
 		}
 		if isValid {
 			validLines = append(validLines, pagesInput[p])
+		} else {
+			invalidLines = append(invalidLines, pagesInput[p])
 		}
 	}
-	return validLines
+	return validLines, invalidLines
 }
 
 func getMiddleNumbers(pagesInput [][]string) int {
@@ -115,8 +117,32 @@ func getMiddleNumbers(pagesInput [][]string) int {
 		middleIndexValue := pagesInput[i][int(middleIndex)]
 		total += convertStringToInt(middleIndexValue)
 	}
-
 	return total
+}
+
+func reformatData(rulesInput [][]string, pagesInput [][]string) [][]string {
+	var formattedData [][]string
+	for p := 0; p < len(pagesInput); p++ {
+		var workingRow []string
+		workingRow = append(workingRow, pagesInput[p]...)
+		var isNotCorrect = true
+		for isNotCorrect {
+			isNotCorrect = false
+			for r := 0; r < len(rulesInput); r++ {
+				indexOne := indexOf(rulesInput[r][0], workingRow)
+				indexTwo := indexOf(rulesInput[r][1], workingRow)
+				if indexOne != -1 && indexTwo != -1 && indexOne > indexTwo {
+					var temp = workingRow[indexOne]
+					workingRow[indexOne] = workingRow[indexTwo]
+					workingRow[indexTwo] = temp
+					isNotCorrect = true
+				}
+			}
+		}
+		formattedData = append(formattedData, workingRow)
+	}
+
+	return formattedData
 }
 
 func main() {
@@ -124,5 +150,8 @@ func main() {
 	var rulesInput, pagesInput = ReadFile("./input.txt")
 	var rulesData = CreateRulesData(rulesInput)
 	var pagesData = CreatePagesData(pagesInput)
-	fmt.Println("Part 1 = ", getMiddleNumbers(part1(rulesData, pagesData)))
+	validLines, invalidLines := part1(rulesData, pagesData)
+	fmt.Println("Part 1 = ", getMiddleNumbers(validLines))
+	var reformattedData = reformatData(rulesData, invalidLines)
+	fmt.Println("Part 2 = ", getMiddleNumbers(reformattedData))
 }
