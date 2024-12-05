@@ -1,3 +1,3 @@
-module AdventOfCode2024Day05
+module AdventOfCode2024Day06
 
 go 1.23
