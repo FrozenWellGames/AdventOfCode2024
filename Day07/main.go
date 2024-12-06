@@ -32,7 +32,7 @@ func ReadFile(filepath string) []string {
 }
 
 func main() {
-	fmt.Println("Advent Of Code 2024 - Day 6")
+	fmt.Println("Advent Of Code 2024 - Day 7")
 	var input = ReadFile("./test.txt")
 	fmt.Println(input[0])
 
