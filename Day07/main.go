@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -61,8 +62,43 @@ func formatData(input []string) ([]int, [][]int) {
 	return answerArray, numbersArray
 }
 
-func part1(answersArray []int, numbersArray [][]int) {
+func calculationsPart1(previousNumbers []int, currentNumber int) []int {
+	returnNumbers := []int{}
 
+	for i := 0; i < len(previousNumbers); i++ {
+		plusAnswer := previousNumbers[i] + currentNumber
+		multiplyAnswer := previousNumbers[i] * currentNumber
+
+		returnNumbers = append(returnNumbers, plusAnswer)
+		returnNumbers = append(returnNumbers, multiplyAnswer)
+	}
+
+	return returnNumbers
+
+}
+
+func part1(answersArray []int, numbersArray [][]int) int {
+	var TotalToReturn int = 0
+
+	for i := 0; i < len(answersArray); i++ {
+
+		workingNumbersArray := []int{numbersArray[i][0]}
+		for i := 1; i < len(numbersArray[1]); i++ {
+			var returnNumbers = []int{}
+			returnNumbers = calculationsPart1(workingNumbersArray, numbersArray[1][i])
+			workingNumbersArray = nil
+
+			fmt.Println("AFTER NIL - workingNumbersArray", workingNumbersArray)
+			workingNumbersArray = append(workingNumbersArray, returnNumbers...)
+
+			fmt.Println("AFTER APPEND - workingNumbersArray", workingNumbersArray)
+		}
+		fmt.Println("END - workingNumbersArray", workingNumbersArray)
+		if slices.Contains(workingNumbersArray, answersArray[i]) {
+			TotalToReturn += answersArray[i]
+		}
+	}
+	return TotalToReturn
 }
 
 func main() {
@@ -72,6 +108,6 @@ func main() {
 	answersArray, numbersArray := formatData(input)
 	fmt.Println("answersArray ", answersArray)
 	fmt.Println("numbersArray", numbersArray)
-	part1(answersArray, numbersArray)
+	fmt.Println(part1(answersArray, numbersArray))
 
 }
