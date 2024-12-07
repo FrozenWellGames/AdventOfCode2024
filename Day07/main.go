@@ -81,19 +81,13 @@ func part1(answersArray []int, numbersArray [][]int) int {
 	var TotalToReturn int = 0
 
 	for i := 0; i < len(answersArray); i++ {
-
 		workingNumbersArray := []int{numbersArray[i][0]}
-		for i := 1; i < len(numbersArray[1]); i++ {
+		for x := 1; x < len(numbersArray[i]); x++ {
 			var returnNumbers = []int{}
-			returnNumbers = calculationsPart1(workingNumbersArray, numbersArray[1][i])
+			returnNumbers = calculationsPart1(workingNumbersArray, numbersArray[i][x])
 			workingNumbersArray = nil
-
-			fmt.Println("AFTER NIL - workingNumbersArray", workingNumbersArray)
 			workingNumbersArray = append(workingNumbersArray, returnNumbers...)
-
-			fmt.Println("AFTER APPEND - workingNumbersArray", workingNumbersArray)
 		}
-		fmt.Println("END - workingNumbersArray", workingNumbersArray)
 		if slices.Contains(workingNumbersArray, answersArray[i]) {
 			TotalToReturn += answersArray[i]
 		}
