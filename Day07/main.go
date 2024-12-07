@@ -44,6 +44,12 @@ func convertStringToInt(s string) int {
 	return returnInt
 }
 
+func convertIntToString(s int) string {
+	returnString := strconv.Itoa(s)
+
+	return returnString
+}
+
 func formatData(input []string) ([]int, [][]int) {
 	answerArray := []int{}
 	numbersArray := [][]int{}
@@ -68,9 +74,24 @@ func calculationsPart1(previousNumbers []int, currentNumber int) []int {
 	for i := 0; i < len(previousNumbers); i++ {
 		plusAnswer := previousNumbers[i] + currentNumber
 		multiplyAnswer := previousNumbers[i] * currentNumber
-
 		returnNumbers = append(returnNumbers, plusAnswer)
 		returnNumbers = append(returnNumbers, multiplyAnswer)
+	}
+
+	return returnNumbers
+
+}
+
+func calculationsPart2(previousNumbers []int, currentNumber int) []int {
+	returnNumbers := []int{}
+
+	for i := 0; i < len(previousNumbers); i++ {
+		plusAnswer := previousNumbers[i] + currentNumber
+		multiplyAnswer := previousNumbers[i] * currentNumber
+		combineAnswer := convertStringToInt(convertIntToString(previousNumbers[i]) + convertIntToString(currentNumber))
+		returnNumbers = append(returnNumbers, plusAnswer)
+		returnNumbers = append(returnNumbers, multiplyAnswer)
+		returnNumbers = append(returnNumbers, combineAnswer)
 	}
 
 	return returnNumbers
@@ -95,13 +116,29 @@ func part1(answersArray []int, numbersArray [][]int) int {
 	return TotalToReturn
 }
 
+func part2(answersArray []int, numbersArray [][]int) int {
+	var TotalToReturn int = 0
+
+	for i := 0; i < len(answersArray); i++ {
+		workingNumbersArray := []int{numbersArray[i][0]}
+		for x := 1; x < len(numbersArray[i]); x++ {
+			var returnNumbers = []int{}
+			returnNumbers = calculationsPart2(workingNumbersArray, numbersArray[i][x])
+			workingNumbersArray = nil
+			workingNumbersArray = append(workingNumbersArray, returnNumbers...)
+		}
+		if slices.Contains(workingNumbersArray, answersArray[i]) {
+			TotalToReturn += answersArray[i]
+		}
+	}
+	return TotalToReturn
+}
+
 func main() {
 	fmt.Println("Advent Of Code 2024 - Day 7")
-	var input = ReadFile("./test.txt")
-	fmt.Println(input)
+	var input = ReadFile("./input.txt")
 	answersArray, numbersArray := formatData(input)
-	fmt.Println("answersArray ", answersArray)
-	fmt.Println("numbersArray", numbersArray)
-	fmt.Println(part1(answersArray, numbersArray))
+	fmt.Println("Part 1 = ", part1(answersArray, numbersArray))
+	fmt.Println("Part 2 = ", part2(answersArray, numbersArray))
 
 }
