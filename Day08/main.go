@@ -77,8 +77,7 @@ func formatData(input []string) [][]string {
 	return returnSlice
 }
 
-func createSets(formattedData [][]string) {
-
+func createSets(formattedData [][]string) []antenna {
 	var uniqueAntennas = []string{}
 	var antennas = []antenna{}
 
@@ -102,15 +101,54 @@ func createSets(formattedData [][]string) {
 			}
 		}
 	}
-	fmt.Println(antennas)
 
+	return antennas
+}
+
+func part1(antennas []antenna, sliceX int, sliceY int) {
+	fmt.Println(sliceY, ",", sliceX)
+	var sliceOfAntinodes = []coordinates{}
+	fmt.Println("antennas = ", antennas)
+	for keyIndex := 0; keyIndex < len(antennas); keyIndex++ {
+
+		for a := 0; a < len(antennas[keyIndex].coOrds)-1; a++ {
+			for b := a + 1; b < len(antennas[keyIndex].coOrds); b++ {
+				x1 := antennas[keyIndex].coOrds[a].x
+				y1 := antennas[keyIndex].coOrds[a].y
+				x2 := antennas[keyIndex].coOrds[b].x
+				y2 := antennas[keyIndex].coOrds[b].y
+
+				stepX := x2 - x1
+				stepY := y2 - y1
+
+				antinode1 := coordinates{x1 - stepX, y1 - stepY}
+				antinode2 := coordinates{x2 + stepX, y2 + stepY}
+
+				if antinode1.x >= 0 && antinode1.x < sliceX && antinode1.y >= 0 && antinode1.y < sliceY {
+					if !slices.Contains(sliceOfAntinodes, antinode1) {
+						sliceOfAntinodes = append(sliceOfAntinodes, antinode1)
+					}
+				}
+				if antinode2.x >= 0 && antinode2.x < sliceX && antinode2.y >= 0 && antinode2.y < sliceY {
+					if !slices.Contains(sliceOfAntinodes, antinode2) {
+						sliceOfAntinodes = append(sliceOfAntinodes, antinode2)
+					}
+				}
+			}
+
+		}
+	}
+	fmt.Println("sliceOfAntinodes ", sliceOfAntinodes)
+
+	fmt.Println("len(sliceOfAntinodes) ", len(sliceOfAntinodes))
 }
 
 func main() {
 	fmt.Println("Advent Of Code 2024 - Day 8")
-	var input = ReadFile("./test.txt")
+	var input = ReadFile("./input.txt")
 	formattedData := formatData(input)
-	fmt.Println(formattedData)
-	createSets(formattedData)
+	antennas := createSets(formattedData)
+
+	part1(antennas, len(input), len(input[0]))
 
 }
