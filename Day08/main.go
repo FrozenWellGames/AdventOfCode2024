@@ -14,7 +14,6 @@ type coordinates struct {
 	y int
 }
 
-// Set is a collection of unique elements
 type antenna struct {
 	key    string
 	coOrds []coordinates
@@ -105,10 +104,12 @@ func createSets(formattedData [][]string) []antenna {
 	return antennas
 }
 
+func isInTheGrid(xLength int, yLength int, position coordinates) bool {
+	return position.x >= 0 && position.x < xLength && position.y >= 0 && position.y < yLength
+}
+
 func part1(antennas []antenna, sliceX int, sliceY int) {
-	fmt.Println(sliceY, ",", sliceX)
 	var sliceOfAntinodes = []coordinates{}
-	fmt.Println("antennas = ", antennas)
 	for keyIndex := 0; keyIndex < len(antennas); keyIndex++ {
 
 		for a := 0; a < len(antennas[keyIndex].coOrds)-1; a++ {
@@ -124,12 +125,12 @@ func part1(antennas []antenna, sliceX int, sliceY int) {
 				antinode1 := coordinates{x1 - stepX, y1 - stepY}
 				antinode2 := coordinates{x2 + stepX, y2 + stepY}
 
-				if antinode1.x >= 0 && antinode1.x < sliceX && antinode1.y >= 0 && antinode1.y < sliceY {
+				if isInTheGrid(sliceX, sliceY, antinode1) {
 					if !slices.Contains(sliceOfAntinodes, antinode1) {
 						sliceOfAntinodes = append(sliceOfAntinodes, antinode1)
 					}
 				}
-				if antinode2.x >= 0 && antinode2.x < sliceX && antinode2.y >= 0 && antinode2.y < sliceY {
+				if isInTheGrid(sliceX, sliceY, antinode2) {
 					if !slices.Contains(sliceOfAntinodes, antinode2) {
 						sliceOfAntinodes = append(sliceOfAntinodes, antinode2)
 					}
@@ -138,9 +139,67 @@ func part1(antennas []antenna, sliceX int, sliceY int) {
 
 		}
 	}
-	fmt.Println("sliceOfAntinodes ", sliceOfAntinodes)
 
-	fmt.Println("len(sliceOfAntinodes) ", len(sliceOfAntinodes))
+	fmt.Println("Part 1 len(sliceOfAntinodes) ", len(sliceOfAntinodes))
+}
+
+func part2(antennas []antenna, sliceX int, sliceY int) {
+	var sliceOfAntinodes = []coordinates{}
+	for keyIndex := 0; keyIndex < len(antennas); keyIndex++ {
+
+		for a := 0; a < len(antennas[keyIndex].coOrds)-1; a++ {
+			for b := a + 1; b < len(antennas[keyIndex].coOrds); b++ {
+				x1 := antennas[keyIndex].coOrds[a].x
+				y1 := antennas[keyIndex].coOrds[a].y
+				x2 := antennas[keyIndex].coOrds[b].x
+				y2 := antennas[keyIndex].coOrds[b].y
+
+				stepX := x2 - x1
+				stepY := y2 - y1
+				stepCount := 1
+				for {
+
+					newX := x1 + 1*stepCount*stepX
+					newY := y1 + 1*stepCount*stepY
+					antinode1 := coordinates{newX, newY}
+					stepCount++
+					if isInTheGrid(sliceX, sliceY, antinode1) {
+						if !slices.Contains(sliceOfAntinodes, antinode1) {
+							sliceOfAntinodes = append(sliceOfAntinodes, antinode1)
+						}
+					} else {
+						break
+					}
+
+				}
+				stepCount = 1
+				for {
+
+					newX := x1 + -1*stepCount*stepX
+					newY := y1 + -1*stepCount*stepY
+					antinode2 := coordinates{newX, newY}
+					stepCount++
+					if isInTheGrid(sliceX, sliceY, antinode2) {
+						if !slices.Contains(sliceOfAntinodes, antinode2) {
+							sliceOfAntinodes = append(sliceOfAntinodes, antinode2)
+						}
+					} else {
+						break
+					}
+
+				}
+
+			}
+
+		}
+		for i := 0; i < len(antennas[keyIndex].coOrds); i++ {
+			if !slices.Contains(sliceOfAntinodes, antennas[keyIndex].coOrds[i]) {
+				sliceOfAntinodes = append(sliceOfAntinodes, antennas[keyIndex].coOrds[i])
+			}
+		}
+
+	}
+	fmt.Println("Part 2 len(sliceOfAntinodes) ", len(sliceOfAntinodes))
 }
 
 func main() {
@@ -148,7 +207,7 @@ func main() {
 	var input = ReadFile("./input.txt")
 	formattedData := formatData(input)
 	antennas := createSets(formattedData)
-
 	part1(antennas, len(input), len(input[0]))
+	part2(antennas, len(input), len(input[0]))
 
 }

@@ -48,6 +48,15 @@ func convertIntToString(s int) string {
 	return returnString
 }
 
+type coordinates struct {
+	x int
+	y int
+}
+
+func isInTheGrid(xLength int, yLength int, position coordinates) bool {
+	return position.x >= 0 && position.x < xLength && position.y >= 0 && position.y < yLength
+}
+
 func main() {
 	fmt.Println("Advent Of Code 2024 - Day 10")
 	var input = ReadFile("./input.txt")
