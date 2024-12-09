@@ -3,8 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func check(e error) {
@@ -57,9 +59,70 @@ func isInTheGrid(xLength int, yLength int, position coordinates) bool {
 	return position.x >= 0 && position.x < xLength && position.y >= 0 && position.y < yLength
 }
 
+func findIndex(s []string, v string) int {
+	for i, vs := range s {
+		if vs == v {
+			return i
+		}
+	}
+
+	return -1
+}
+
+func findLastIndex(s []string, v string) int {
+
+	for i := len(s) - 1; i >= 0; i-- {
+		if s[i] != v {
+			return i
+		}
+	}
+
+	return -1
+}
+
+func Part1(input string) int {
+
+	var inputSlice []string
+	for _, slice := range strings.Split(input, "") {
+		inputSlice = append(inputSlice, slice)
+	}
+
+	var blocks []string
+
+	for i := 0; i < len(inputSlice); i++ {
+		mod := math.Mod(float64(i), 2)
+		if mod == 0 {
+			for j := 0; j < convertStringToInt(inputSlice[i]); j++ {
+				blocks = append(blocks, convertIntToString(i/2))
+			}
+		}
+		if mod == 1 {
+			for j := 0; j < convertStringToInt(inputSlice[i]); j++ {
+				blocks = append(blocks, ".")
+			}
+		}
+	}
+
+	for i := 0; i < len(blocks); i++ {
+		indexFirst := findIndex(blocks, ".")
+		indexLast := findLastIndex(blocks, ".")
+		blocks[indexFirst] = blocks[indexLast]
+		blocks[indexLast] = "."
+	}
+
+	total := 0
+	for i := 0; i < len(blocks); i++ {
+		if blocks[i] != "." {
+			total += convertStringToInt(blocks[i]) * i
+		}
+	}
+
+	return total
+}
+
 func main() {
 	fmt.Println("Advent Of Code 2024 - Day 9")
 	var input = ReadFile("./input.txt")
-	fmt.Println(input)
+	fmt.Println("Part 1 = ", Part1(input[0]))
 
 }
