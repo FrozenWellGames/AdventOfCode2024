@@ -3,10 +3,8 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 	"strconv"
-	"strings"
 )
 
 func check(e error) {
@@ -31,9 +29,7 @@ func ReadFile(filepath string) []string {
 		returnInput = append(returnInput, line)
 		cnt++
 	}
-
-	var array = strings.Split(returnInput[0], " ")
-	return array
+	return returnInput
 
 }
 
@@ -52,30 +48,18 @@ func convertIntToString(s int) string {
 	return returnString
 }
 
-func Part1(input []string) {
-	for c := 0; c < 25; c++ {
-		var workingArray = []string{}
-		for i := 0; i < len(input); i++ {
-			if input[i] == "0" {
-				workingArray = append(workingArray, "1")
-			} else if math.Mod(float64(len(input[i])), 2) == 0 {
-				res1 := input[i][0 : len(input[i])/2]
-				res2Int := convertStringToInt(input[i][len(input[i])/2:])
-				workingArray = append(workingArray, res1)
-				workingArray = append(workingArray, convertIntToString(res2Int))
-			} else {
-				workingArray = append(workingArray, (convertIntToString(convertStringToInt(input[i]) * 2024)))
-			}
-		}
-		input = workingArray
-	}
-	fmt.Println("Part 1 = ", len(input))
+type coordinates struct {
+	x int
+	y int
+}
+
+func isInTheGrid(xLength int, yLength int, position coordinates) bool {
+	return position.x >= 0 && position.x < xLength && position.y >= 0 && position.y < yLength
 }
 
 func main() {
-	fmt.Println("Advent Of Code 2024 - Day 11")
+	fmt.Println("Advent Of Code 2024 - Day 12")
 	var input = ReadFile("./test.txt")
 	fmt.Println(input)
-	Part1(input)
 
 }
